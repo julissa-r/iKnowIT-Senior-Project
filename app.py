@@ -5,7 +5,8 @@ from markupsafe import escape
 app = Flask(__name__)
 app.secret_key = "replace-with-a-strong-random-secret"
 
-# Simple translations dictionary (English, Spanish, Chinese)
+# simple translations dictionary (English, Spanish, Chinese) 
+# NOTE: i hardcoded translations for demo purposes; in a real app, we need to get it translated properly and automatically for ALL PAGES! 
 TRANSLATIONS = {
     'en': {
         'title': "iKnowIT",
@@ -76,7 +77,7 @@ def t(key):
     lang = session.get('lang', 'en')
     return TRANSLATIONS.get(lang, TRANSLATIONS['en']).get(key, key)
 
-# sample testimonies (would come from DB in real app)
+# dummy testimonies for now... not sure if we wanna add real ones from our parents testing it or whatever, but we'll have this for now
 TESTIMONIES = [
     {"name": "Alice", "text": "iKnowIT helped my grandma learn texting in a week!"},
     {"name": "Miguel", "text": "Clear videos and step captions -- highly recommend."},
@@ -127,7 +128,7 @@ def signup():
         if not name or not email or not password:
             flash("Please fill all required fields.")
             return render_template('signup.html')
-        # In a real app: save user to DB
+        # we need to save our users to a database in a real app; for demo, we just flash a message
         flash("Account created (demo). You can now log in.")
         return redirect(url_for('index'))
     return render_template('signup.html')
@@ -150,38 +151,64 @@ def android_page():
 
 @app.route('/about')
 def about():
-    # info about everyone on our team along with our headshots (makes it more personal)
+    # info about everyone on our team along with our headshots, github, linkedin, and short bios. wanted to add this for when we are interviewing with companies
+    # it looks a lot more professional and shows off our skills and experience better (at least in my opinion)
     team = [
-        {"name": "Julissa Rivera", "role": "Developer, Documentation", "bio":
-         """
-         As a first-generation Mexican American, I witnessed firsthand how challenging it can be for my parents and relatives to navigate technology. 
-         I often took the time to show them how to use apps on their phones and reassure them that, with a little practice, they could get the hang of it. 
-         I know many other parents and individuals face the same struggle, so I wanted to use this project as an opportunity to help others in similar situations 
-         gain confidence/independence when it comes to using technology. 😊.
-         """
-         , "img": "images/julissa.jpeg"},
-        {"name": "David Bazan", "role": "Developer, Documentation", "bio": 
-         """
-         Technology should be accesible to everyone, despite language or past experience. As a first-generation hispanic, I understand the frustration of learning the 
-         ever expanding technology. The other developers and I share this experience and made this project to assist those  to develop critical skills that 
-         become more relevant by the day.
-         """
-         , "img": "images/bazan.webp"},
-        {"name": "Jacqueline Juarez", "role": "Team Lead, Developer", "bio": "I focused on making the website intuitive and easy to read.", "img": "images/jacqui.webp"}
+        {
+            "name": "Julissa Rivera",
+            "role": "Developer, Documentation",
+            "bio": (
+                "As a first-generation Mexican American, I witnessed firsthand how challenging it can be for my parents and relatives to navigate technology. "
+                "I often took the time to show them how to use apps on their phones and reassure them that, with a little practice, they could get the hang of it. "
+                "I know many other parents and individuals face the same struggle, so I wanted to use this project as an opportunity to help others in similar situations "
+                "gain confidence/independence when it comes to using technology. 😊."
+            ),
+            "img": "images/julissa.jpeg",
+            "github": "https://github.com/julissa-r",
+            "linkedin": "https://www.linkedin.com/in/rivera-j2911/"
+        },
+        {
+            "name": "David Bazan",
+            "role": "Developer, Documentation",
+            "bio": (
+                "Technology should be accessible to everyone, despite language or past experience. "
+                "As a first-generation Hispanic, I understand the frustration of learning the ever-expanding technology. "
+                "The other developers and I share this experience and made this project to assist those to develop critical skills that become more relevant by the day."
+            ),
+            "img": "images/bazan.webp",
+            "github": "https://github.com/d-bazan",
+            "linkedin": "https://www.linkedin.com/in/d-bazan/"
+        },
+        {
+            "name": "Jacqueline Juarez",
+            "role": "Team Lead, Developer",
+            "bio": "I focused on making the website intuitive and easy to read.",
+            "img": "images/jacqui.webp",
+            "github": "https://github.com/Jacqjuarez",
+            "linkedin": "https://www.linkedin.com/in/jacqueline-juarez8/"
+        }
     ]
+
     return render_template('about.html', team=team)
 
+# does not work yet, coming back to fix this later
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
+    success = False
+
     if request.method == 'POST':
         name = request.form.get('name', '').strip()
         email = request.form.get('email', '').strip()
         message = request.form.get('message', '').strip()
-        # For demo: print message to console; in production, save to DB or send email
-        print(f"[Contact] {name} <{email}>: {message}")
-        return render_template('contact.html', success=True)
-    return render_template('contact.html', success=False)
 
+        if name and email and message:
+            # In a real app, save to database or send an email
+            success = True
+            flash("Your message has been received!")
+
+    return render_template('contact.html', success=success)
+
+# does not work yet either, will come back to fix later
 @app.route('/faq')
 def faq():
     faqs = [
@@ -189,6 +216,8 @@ def faq():
         {"q": "How do I create an account?", "a": "Open the Login modal and click 'Create account' to sign up."},
     ]
     return render_template('faq.html', faqs=faqs)
+
+# still need to make the pages for the iOS and Android tutorials, but the rest of the site is mostly done for now. we can go into styling and adding the videos later
 
 if __name__ == '__main__':
     app.run(debug=True)
