@@ -160,7 +160,13 @@ def about():
          gain confidence/independence when it comes to using technology. 😊.
          """
          , "img": "images/julissa.jpeg"},
-        {"name": "David Bazan", "role": "Developer, Documentation", "bio": "Teaching tech should be simple, visual, and friendly.", "img": "images/bazan.webp"},
+        {"name": "David Bazan", "role": "Developer, Documentation", "bio": 
+         """
+         Technology should be accesible to everyone, despite language or past experience. As a first-generation hispanic, I understand the frustration of learning the 
+         ever expanding technology. The other developers and I share this experience and made this project to assist those  to develop critical skills that 
+         become more relevant by the day.
+         """
+         , "img": "images/bazan.webp"},
         {"name": "Jacqueline Juarez", "role": "Team Lead, Developer", "bio": "I focused on making the website intuitive and easy to read.", "img": "images/jacqui.webp"}
     ]
     return render_template('about.html', team=team)
